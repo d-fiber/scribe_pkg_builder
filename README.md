@@ -1,0 +1,138 @@
+# @scribe/builder
+
+The package driver of the [scribe](https://github.com/d-fiber/scribe) framework.
+
+It reads the packages a framework checkout holds, settles which version of each one a project ends up with, and writes
+the four files everything downstream obeys. It is a library: you import it, and there is nothing here to install and no
+command to type.
+
+## Where it sits
+
+Three programs work on packages, and each has one job.
+
+|                        | What it does                                                                              |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
+| `scribedev pkg create` | writes a package, laid out the way every package has to be                                |
+| `scribedev pkg check`  | reads the packages under a directory and says what is wrong with them                     |
+| `@scribe/builder`      | reads the packages that already exist, resolves them, and writes what the toolchain obeys |
+
+The rules a person writes against live in the tool a person runs, which is
+[`scribedev`](https://github.com/d-fiber/scribe_dev_tools). What is here runs on their behalf, at build time and at run
+time, and an author of a package never types its name.
+
+## Getting it
+
+By specifier. There is no binary, nothing to unpack, and nothing copied into the framework's repository: this is a
+dependency there, resolved once and pinned by a lockfile.
+
+```ts
+import { mount, Package } from "@scribe/builder";
+import { emit } from "@scribe/builder/tools";
+```
+
+## The two halves
+
+They are separate entry points, and the line between them is the only structural decision here.
+
+**`@scribe/builder`** is the half a package carries into the project that mounts it. It opens no file and reaches
+nothing outside the process, so depending on it drags no toolchain along.
+
+`Package` declares a manifest one step at a time, in the order a package's life takes. Each step answers only what may
+legally follow it, so the order is a matter of types rather than of convention, and what comes out is frozen.
+
+```ts
+Package.named("realtime")
+  .describedAs("Broadcasts a row to the callers a channel lets in.")
+  .version("1.2.0")
+  .dependsOn({ audiences: "^1.0.0" })
+  .build();
+```
+
+`mount` puts that manifest back together with whichever lifecycle steps the package's entry exports: `wires` at import,
+`starts` after boot, `stops` at shutdown. All three are optional.
+
+**`@scribe/builder/tools`** is the half that touches the disk and never leaves the toolchain. `emit` is its operation.
+
+```ts
+const resolution = await emit({
+  roots: ["packages"],
+  into: ".scribe",
+  consumers: ["app"],
+  driver: "jsr:@scribe/builder@1.0.0",
+});
+```
+
+| It writes          | Who reads it                                                                      |
+| ------------------ | --------------------------------------------------------------------------------- |
+| `imports.json`     | Deno, as the import map of the run                                                |
+| `resolution.json`  | the CLI that renders a project, instead of walking the tree itself                |
+| `registrations.ts` | the host, to reach every mounted package and its lifecycle steps                  |
+| `scribe.lock`      | the next resolution, and whoever asks why a package they never wrote down is here |
+
+## What a package is
+
+A directory carrying a `package.yaml`, and nothing else says so.
+
+```yaml
+name: realtime
+description: Broadcasts a row to the callers a channel lets in.
+version: 1.2.0
+
+dependencies:
+  audiences: "^1.0.0"
+```
+
+Four keys, and no others. Everything else about a package is read off its tree rather than written down twice: where its
+entry is, what it exports, what SQL it poses, what it imports from outside the framework. A path that has to be declared
+as well as laid out is a chance for the two to disagree, and the one that loses is always the tree, since that is what
+actually runs.
+
+## What the map grants, and what it closes
+
+A package reaches the packages it declared, and whatever it writes outside the framework that the workspace has settled.
+A project reaches what it named, and not what came in behind it.
+
+Two things are closed there rather than by a rule somebody has to run. Only the entries a package exports are written,
+so `@scribe/realtime/src/anything.ts` resolves nowhere and the private half of a package stays private. And every grant
+sits in the scope of the directory that declared it, so a package pulled in behind another is on disk, is mounted, and
+is unreachable from code that did not ask for it.
+
+Both failures read as Deno's own `not a dependency and not in import map`.
+
+## Seeing it work
+
+`examples/` is a workspace of two packages and a project that mounts one of them, plus the twenty lines that call
+`emit`. It runs, which is the point of it.
+
+```sh
+deno task example        writes .scribe/ and says what it settled on
+deno task example:test   writes it, then runs every test through the map it wrote
+```
+
+`examples/README.md` says what each piece of it is there to show.
+
+## Working on it
+
+`CONTRIBUTING.md` says how a change is made and what it has to pass before it is opened. `STYLE.md` says what the code
+has to look like, which is what a review is done against. `TESTING.md` says what the proof has to look like.
+`CHANGELOG.md` says what each version holds.
+
+## Layout
+
+```
+mod.ts               the half a package carries into the project that mounts it
+tools.ts             the half that touches the disk
+src/declaration/     what a package says about itself: the chain, the manifest, the names
+src/version/         a version, a constraint, and the arithmetic between them
+src/workspace/       the layout, the scope, the walk, and what is read off a tree
+src/resolution/      the registry and the solver
+src/emit/            emit, and the four files it writes
+examples/            a workspace that runs, and what the builder makes of it
+```
+
+Everything under `src/emit/` that writes a file has a sibling that only builds the value, so the half worth asserting on
+is testable without a disk.
+
+## Licence
+
+Mozilla Public License 2.0. The terms are in `LICENSE`, and each file carries the notice.
