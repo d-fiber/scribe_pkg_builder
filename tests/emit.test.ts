@@ -88,21 +88,6 @@ Deno.test("the import map grants nothing from anywhere but the driver", async ()
   });
 });
 
-Deno.test("a driver named by a registry specifier is written as it stands", async () => {
-  await inTemporaryRoot(async (root) => {
-    await chain(root);
-    const map = importMapFor(await discover([root]), join(root, ".scribe", "imports.json"), {
-      driver: "jsr:@scribe/builder@1.0.0",
-    });
-
-    assertEquals(
-      map.imports,
-      { "@scribe/builder": "jsr:@scribe/builder@1.0.0" },
-      "the specifier was turned into a path",
-    );
-  });
-});
-
 Deno.test("a package that needs nothing gets no scope", async () => {
   await inTemporaryRoot(async (root) => {
     await chain(root);

@@ -39,8 +39,6 @@ import type { DiscoveredPackage } from "../workspace/discovery.ts";
 import { DRIVER, SCOPE } from "../workspace/scope.ts";
 import { specifierFrom } from "./paths.ts";
 
-const SCHEMED = /^[a-z][a-z0-9+.-]*:/;
-
 /** One directory of code, with the packages the map lets it reach. */
 export interface Consumer {
   /** The absolute path of the directory the entry applies to. */
@@ -64,12 +62,12 @@ export interface ImportMapOptions {
   readonly consumers?: readonly Consumer[];
 
   /**
-   * What answers `@scribe/builder`, which every package reaches to declare itself.
+   * The absolute path of the driver's surface, which every package reaches to declare itself.
    *
    * @remarks
-   * Either the absolute path of the driver's surface on this machine, or a specifier carrying a
-   * scheme, such as `jsr:@scribe/builder@1.0.0`. A path is written relative to the map, and a
-   * scheme is written as it stands, since it already says on its own what answers it.
+   * It is a path and never a registry specifier, because the half that writes the registrations
+   * and the half those registrations import have to be the same copy. A framework checkout carries
+   * one, so the map points at it.
    *
    * Left out when the packages are read for something other than a run.
    */
@@ -148,7 +146,7 @@ export function importMapFor(
 
   const imports: Record<string, string> = {};
   if (options.driver !== undefined) {
-    imports[DRIVER] = SCHEMED.test(options.driver) ? options.driver : specifierFrom(from, options.driver);
+    imports[DRIVER] = specifierFrom(from, options.driver);
   }
 
   return { imports, scopes: sortedScopes(scopes) };
