@@ -20,5 +20,17 @@
     "@std/assert": "jsr:@std/assert@1",
     "@std/path": "jsr:@std/path@1",
     "@std/yaml": "jsr:@std/yaml@1"
+  },
+  "publish": {
+    "exclude": [
+      "tests",
+      "examples",
+      "tool",
+      ".github",
+      ".githooks",
+      "CONTRIBUTING.md",
+      "STYLE.md",
+      "TESTING.md"
+    ]
   }
 }
