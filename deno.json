@@ -9,7 +9,9 @@
     "check": "deno check mod.ts tools.ts src tests",
     "test": "deno test --allow-read --allow-write tests",
     "lint": "deno lint",
-    "fmt": "deno fmt"
+    "fmt": "deno fmt",
+    "example": "deno run --allow-read --allow-write examples/build.ts",
+    "example:test": "deno task example && deno test --no-config --import-map examples/.scribe/imports.json examples/app examples/packages"
   },
   "fmt": {
     "lineWidth": 120
