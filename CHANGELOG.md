@@ -64,8 +64,8 @@ it, so a package pulled in behind another is on disk, is mounted, and is unreach
 Both failures read as Deno's own `not a dependency and not in import map`.
 
 `@scribe/builder` itself is the one thing that resolves from anywhere, since every package reaches it to declare itself.
-It is named by the caller, either as a path on this machine or as a specifier carrying a scheme, such as
-`jsr:@scribe/builder@1.0.0`.
+The caller names where it sits, as a path inside the checkout it came with: the half that writes the registrations and
+the half those registrations import have to be the same copy.
 
 ### `examples/`
 

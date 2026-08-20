@@ -216,7 +216,7 @@ Yes
 `BREAKING` wins over whatever else the change also is. It is the tag somebody scanning the history for what they have to
 fix is looking for, and this library's public surface is what a whole framework compiles against.
 
-## Versions and publishing
+## Versions, and how the framework picks them up
 
 The version lives in `deno.json` and nowhere else.
 
@@ -240,15 +240,24 @@ The headings come in the order somebody reading it cares about: what breaks them
 they gain, what stopped hurting, and the rest behind it. The commits that only raise the version or write the changelog
 are left out, since they are the bookkeeping rather than the work.
 
+The first version of all is the exception, and it is worth knowing before you write one. A first version has no tag
+behind it, so everything counts as having moved and the CI writes its whole section from the commit list. Prose for a
+first version therefore goes in after that push, never before.
+
 `dev` can run three versions ahead of `main` and nothing is waiting on anybody.
 
 `main` moves when the owner decides it moves, and nobody else. The `promote` workflow is run by hand and takes the
 version being put out. It refuses anybody else who asks, it refuses a version `dev` does not hold, and it refuses a
-version that was never tagged. Then it merges, writes the release from the changelog sections `main` had not yet seen,
-and publishes that version to JSR.
+version that was never tagged. Then it merges and writes the release from the changelog sections `main` had not yet
+seen.
 
-Nothing is copied into the framework's repository. This is a dependency there, resolved by specifier and pinned by a
-lockfile, which is why there is no binary here and nothing to install.
+**Nothing is published to a registry.** This code lives in the framework's own repository under `host/builder/`, and
+`host/deno.json` answers `@scribe/builder` with a path inside the checkout, the way it answers every other `@scribe/`
+specifier it has. One repository, one version, one copy: whoever clones the framework gets the builder that framework
+was tested against, and there is nothing to resolve and nothing to keep in step.
+
+That is also why `deno publish --dry-run` stays in `tool/test.sh` even though nothing is ever published. It is the only
+tool here with an opinion about the exported surface, and it is worth keeping for that alone.
 
 Your work is done when it is on `dev` and the CI is green. What happens to it afterwards is not something you have to
 wait for or ask about.

@@ -67,7 +67,7 @@ deno test --allow-read --allow-write tests "$@"
 say "emitting the example, and running it through the map it wrote"
 deno task example:test
 
-say "checking what the published surface would have to satisfy"
+say "checking the exported surface"
 deno publish --dry-run --allow-dirty
 
 echo ""
