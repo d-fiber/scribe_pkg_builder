@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.0.0
+
+BREAKING:
+
+- [BREAKING]: require a package to name the framework it runs on (3db9dbd)
+
+CHORE:
+
+- [CHORE]: reflow the manifest reader to the width this repository uses (990feb7)
+
 ## 2.0.0
 
 BREAKING:
