@@ -82,17 +82,14 @@ export function manifestFrom(source: string, where: string): Manifest {
 
   const named = Package.named(text(document, "name", where));
   const description = optionalText(document, "description", where);
-  const describing: AwaitingVersion =
-    description === null ? named : named.describedAs(description);
+  const describing: AwaitingVersion = description === null ? named : named.describedAs(description);
 
   const versioned = describing.version(text(document, "version", where));
   const running = versioned.runsOn(framework(document, where));
 
   const dependencies = mapping(document, "dependencies", where);
   return (
-    dependencies === null
-      ? running
-      : running.dependsOn(dependencies as Dependencies)
+    dependencies === null ? running : running.dependsOn(dependencies as Dependencies)
   ).build();
 }
 
@@ -228,9 +225,11 @@ function mapping(
   }
 
   const held: Record<string, string> = {};
-  for (const [name, value_] of Object.entries(
-    value as Record<string, unknown>,
-  )) {
+  for (
+    const [name, value_] of Object.entries(
+      value as Record<string, unknown>,
+    )
+  ) {
     if (typeof value_ !== "string") {
       throw new ManifestError(
         `${where} holds "${key}.${name}:" as something other than a word.`,
