@@ -2,5 +2,8 @@ name: realtime
 description: Broadcasts a row to the callers a channel lets in.
 version: 1.2.0
 
+environment:
+  scribe: "^3.0.0"
+
 dependencies:
   audiences: "^1.0.0"

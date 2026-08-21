@@ -2,4 +2,7 @@ name: audiences
 description: The named sets somebody belongs to, and the rights that follow.
 version: 1.0.0
 
+environment:
+  scribe: "^3.0.0"
+
 dependencies:
