@@ -10,11 +10,11 @@ command to type.
 
 Three programs work on packages, and each has one job.
 
-|                        | What it does                                                                              |
-| ---------------------- | ----------------------------------------------------------------------------------------- |
-| `scribedev pkg create` | writes a package, laid out the way every package has to be                                |
-| `scribedev pkg check`  | reads the packages under a directory and says what is wrong with them                     |
-| `@scribe/builder`      | reads the packages that already exist, resolves them, and writes what the toolchain obeys |
+|                         | What it does                                                                              |
+| ----------------------- | ----------------------------------------------------------------------------------------- |
+| `scribedev pkg create`  | writes a package, laid out the way every package has to be                                |
+| `scribedev pkg analyze` | reads the packages under a directory and says what is wrong with them                     |
+| `@scribe/builder`       | reads the packages that already exist, resolves them, and writes what the toolchain obeys |
 
 The rules a person writes against live in the tool a person runs, which is
 [`scribedev`](https://github.com/d-fiber/scribe_dev_tools). What is here runs on their behalf, at build time and at run

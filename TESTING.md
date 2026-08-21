@@ -144,8 +144,8 @@ await writePackage(root, "realtime", {
 ```
 
 `tests/support/workspace.ts` writes the manifest and the entry and nothing else, on purpose: what a package must carry
-beyond those is `scribedev pkg check`'s to say, not this repository's. A fixture here is a package these tools can read,
-not one that would pass that check.
+beyond those is `scribedev pkg analyze`'s to say, not this repository's. A fixture here is a package these tools can
+read, not one that would pass that check.
 
 The harness is imported by other files, which makes it code like any other: its surface is documented, even though the
 test files that use it carry no comment at all.

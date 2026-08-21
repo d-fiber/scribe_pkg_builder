@@ -73,6 +73,6 @@ It is generated, and `.gitignore` keeps it out of the repository.
 
 ## Writing your own
 
-`scribedev pkg create <name>` writes the layout every package has to have, and `scribedev pkg check <directory>` says
+`scribedev pkg create <name>` writes the layout every package has to have, and `scribedev pkg analyze <directory>` says
 what is wrong with the ones already there. Neither is in this repository: `scribedev` is the command line the framework
 is maintained with, and this is a library.
