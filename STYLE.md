@@ -456,7 +456,7 @@ program prints.
 ## What the tools hold you to
 
 ```sh
-deno task check          # mod.ts, tools.ts, src, tests
+deno task check          # tools.ts, src, tests
 deno task lint
 deno task fmt
 deno task test

@@ -35,7 +35,7 @@
 // LICENSE file, the LICENSE file governs.
 
 import { fromFileUrl, join } from "@std/path";
-import { Constraint } from "../mod.ts";
+import { Constraint } from "@scribe/alchemy";
 import { emit } from "../tools.ts";
 
 const here = import.meta.dirname!;
@@ -45,7 +45,7 @@ const resolution = await emit({
   into: join(here, ".scribe"),
   wants: new Map([["realtime", Constraint.any()]]),
   consumers: [join(here, "app")],
-  driver: fromFileUrl(import.meta.resolve("../mod.ts")),
+  language: fromFileUrl(import.meta.resolve("@scribe/alchemy")),
   imports: new Map([["@std/assert", "jsr:@std/assert@1"]]),
 });
 

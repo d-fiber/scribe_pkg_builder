@@ -43,19 +43,19 @@ your side, and finding that out in the middle of a change costs an afternoon.
 
 ## What this repository holds, and what it deliberately does not
 
-Two surfaces, and the line between them is the only structural decision here.
+One surface, `tools.ts`, and everything under `src/` reaches a project through it. It runs before anything is built,
+never inside what it built, so it may read a directory, write a file and lean on `@std`.
 
-```
-mod.ts     the half a package carries into the project that mounts it
-tools.ts   the half that touches the disk, and never leaves the toolchain
-```
+What a package is written against is not here. The chain a package declares itself with, the three moments it runs at,
+the values it passes around: that is the language, and it lives in
+[`@scribe/alchemy`](https://github.com/d-fiber/scribe_alchemy), which a package reaches from anywhere on the machine.
+This repository imports it like everybody else, and the registrations it writes import it too.
 
-`mod.ts` opens no file and reaches nothing outside the process. That is what lets a package depend on it without
-dragging a toolchain along. If what you are adding reads a directory, it belongs on the other side of that line, and
-putting it on the wrong one is the one mistake here that nothing will catch for you.
+That is the line worth holding: a type a package needs goes to alchemy, and adding it here instead makes it a type only
+somebody with the toolchain can name.
 
 Writing a package and saying what is wrong with one are not here either. They are `scribedev pkg create` and
-`scribedev pkg check`. The rules a person writes against live in the tool a person runs.
+`scribedev pkg analyze`. The rules a person writes against live in the tool a person runs.
 
 ## Where your work goes
 
@@ -147,7 +147,7 @@ Four things, and the last two are the ones people forget:
 ```
 src/<subject>/<thing>.ts       the code, licence notice included
 tests/<subject>.test.ts        the test, and see it red first
-mod.ts or tools.ts             the export, on the correct side of the line
+tools.ts                       the export, if a caller outside src/ needs it
 .claude/scribe_pkg_builder/    the why, in the framework's own documentation
 ```
 
@@ -251,7 +251,7 @@ version being put out. It refuses anybody else who asks, it refuses a version `d
 version that was never tagged. Then it merges and writes the release from the changelog sections `main` had not yet
 seen.
 
-**Nothing is published to a registry.** This code lives in the framework's own repository under `host/builder/`, and
+**Nothing is published to a registry.** This code lives in the framework's own repository under `host/pkg/builder/`, and
 `host/deno.json` answers `@scribe/builder` with a path inside the checkout, the way it answers every other `@scribe/`
 specifier it has. One repository, one version, one copy: whoever clones the framework gets the builder that framework
 was tested against, and there is nothing to resolve and nothing to keep in step.
