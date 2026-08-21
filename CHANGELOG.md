@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.0.0
+
+BREAKING:
+
+- [BREAKING]: hand the language over to alchemy (bdac473)
+- [BREAKING]: make the driver a path, never a registry specifier (5e9c675)
+
+DOC:
+
+- [DOC]: follow the CLI's rename of pkg check to pkg analyze (8cf5081)
+- [DOC]: say this code lives in the framework's own tree (778e3f3)
+
+CI:
+
+- [CI]: put the language beside the checkout before anything runs (99a3599)
+- [CI]: copy the builder into the framework when a version lands (44e2783)
+- [CI]: stop the promotion at the release, with nothing to publish (e0736ea)
+
 ## 1.0.0
 
 The first version of `@scribe/builder`, the library that reads the packages a framework checkout holds and writes what
