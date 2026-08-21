@@ -22,6 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Put the language beside the checkout
+        run: git clone --depth 1 --branch dev https://github.com/d-fiber/scribe_alchemy.git "$GITHUB_WORKSPACE/../scribe_alchemy"
+
       - uses: denoland/setup-deno@v2
         with:
           deno-version: ${{ env.DENO_VERSION }}

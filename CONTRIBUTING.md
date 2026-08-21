@@ -20,9 +20,13 @@ By opening a pull request you are offering your change under those terms.
 
 ## Getting set up
 
-You need Deno 2. This is developed against 2.7.
+You need Deno 2, developed against 2.7, and a clone of [`scribe_alchemy`](https://github.com/d-fiber/scribe_alchemy)
+sitting beside this one. `deno.json` answers `@scribe/alchemy` with `../scribe_alchemy/mod.ts`, so without it nothing
+here resolves and `tool/test.sh` says so before it does anything else.
 
 ```sh
+git clone git@github.com:d-fiber/scribe_alchemy.git ../scribe_alchemy
+
 deno task check
 deno task test
 git config core.hooksPath .githooks

@@ -50,6 +50,15 @@ if ! command -v deno >/dev/null 2>&1; then
   exit 1
 fi
 
+LANGUAGE="$PACKAGE/../scribe_alchemy/mod.ts"
+
+if [ ! -f "$LANGUAGE" ]; then
+  echo "[$SCOPE] The language is not beside this checkout, so nothing here resolves." >&2
+  echo "[$SCOPE] deno.json answers @scribe/alchemy with ../scribe_alchemy/mod.ts, which is not there." >&2
+  echo "[$SCOPE]   git clone git@github.com:d-fiber/scribe_alchemy.git $(cd "$PACKAGE/.." && pwd)/scribe_alchemy" >&2
+  exit 1
+fi
+
 cd "$PACKAGE"
 
 say "checking the formatting"
